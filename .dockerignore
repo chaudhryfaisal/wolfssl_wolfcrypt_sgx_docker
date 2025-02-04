@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Allow files and directories
+!/Makefile
+
+# Ignore unnecessary files inside allowed directories
+# This should go after the allowed directories
+**/*.log
