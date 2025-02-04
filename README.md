@@ -12,10 +12,9 @@ make benchmark-sgx-intel # run benchmark with sgx libraries in simulaiton mode w
 # Full Logs
 ```bash
 # make docker-benchmark
-
-make[1]: Entering directory '/home/ec2-user/wolfcrypt_sgx_docker'
+make[1]: Entering directory '/home/ec2-user/wolfssl_wolfcrypt/wolfcrypt_sgx_docker'
 docker build -t wolfcrypt_sgx_docker --build-arg REPO_BASE= --build-arg HTTPS_PROXY= .
-Sending build context to Docker daemon  11.26kB
+Sending build context to Docker daemon  9.728kB
 Step 1/29 : ARG REPO_BASE
 Step 2/29 : ARG IMG_BASE=oraclelinux:8.6
 Step 3/29 : FROM ${REPO_BASE}docker.io/library/${IMG_BASE} AS base
@@ -97,49 +96,44 @@ Step 29/29 : ENV http_proxy='' https_proxy='' HTTP_PROXY='' HTTPS_PROXY=''
  ---> cd2fb980b6d3
 Successfully built cd2fb980b6d3
 Successfully tagged wolfcrypt_sgx_docker:latest
-docker run --rm -it  -e https_proxy= -v /home/ec2-user/wolfcrypt_sgx_docker/:/wolfcrypt_sgx_docker/ -w /wolfcrypt_sgx_docker wolfcrypt_sgx_docker make clean benchmark-all
-rm -rf *.log wolfssl_*
-test -d /wolfcrypt_sgx_docker/wolfssl_5.7.6 || make setup
+docker run --rm -it  -e https_proxy= -v /home/ec2-user/wolfssl_wolfcrypt/wolfcrypt_sgx_docker/:/wolfcrypt_sgx_docker/ -w /wolfcrypt_sgx_docker wolfcrypt_sgx_docker make clean benchmark-all
+rm -rf *.log __*
+test -d /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable || make setup
 make[1]: Entering directory '/wolfcrypt_sgx_docker'
-#sudo yum install -y clang clang-devel autoconf automake libtool
-test -d /wolfcrypt_sgx_docker/wolfssl_5.7.6 || ( mkdir -p /wolfcrypt_sgx_docker/wolfssl_5.7.6 && wget -O wolfssl_5.7.6.tar.gz https://github.com/wolfSSL/wolfssl/archive/refs/tags/v5.7.6-stable.tar.gz && \
-        tar xzf wolfssl_5.7.6.tar.gz -C /wolfcrypt_sgx_docker/wolfssl_5.7.6 --strip-component 1 )
---2025-01-31 20:02:29--  https://github.com/wolfSSL/wolfssl/archive/refs/tags/v5.7.6-stable.tar.gz
-Resolving github.com (github.com)... 140.82.116.4
-Connecting to github.com (github.com)|140.82.116.4|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-Location: https://codeload.github.com/wolfSSL/wolfssl/tar.gz/refs/tags/v5.7.6-stable [following]
---2025-01-31 20:02:29--  https://codeload.github.com/wolfSSL/wolfssl/tar.gz/refs/tags/v5.7.6-stable
-Resolving codeload.github.com (codeload.github.com)... 140.82.116.9
-Connecting to codeload.github.com (codeload.github.com)|140.82.116.9|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 24573776 (23M) [application/x-gzip]
-Saving to: 'wolfssl_5.7.6.tar.gz'
+test -d __wolfssl_v5.7.6-stable || git clone --depth 1 --branch v5.7.6-stable https://github.com/wolfSSL/wolfssl.git __wolfssl_v5.7.6-stable
+Cloning into '__wolfssl_v5.7.6-stable'...
+remote: Enumerating objects: 3340, done.
+remote: Counting objects: 100% (3340/3340), done.
+remote: Compressing objects: 100% (2605/2605), done.
+Receiving objects: 100% (3340/3340), 23.61 MiB | 16.13 MiB/s, done.
+remote: Total 3340 (delta 881), reused 1981 (delta 594), pack-reused 0 (from 0)
+Resolving deltas: 100% (881/881), done.
+Note: switching to '239b85c80438bf60d9a5b9e0ebe9ff097a760d0d'.
 
-wolfssl_5.7.6.tar.g 100%[===================>]  23.43M  29.2MB/s    in 0.8s    
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
 
-2025-01-31 20:02:30 (29.2 MB/s) - 'wolfssl_5.7.6.tar.gz' saved [24573776/24573776]
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
 
-test -d wolfssl_examples || ( mkdir wolfssl_examples && wget -O wolfssl_examples.tar.gz https://github.com/wolfSSL/wolfssl-examples/archive/refs/heads/master.tar.gz && \
-        tar xzf wolfssl_examples.tar.gz -C wolfssl_examples --strip-component 1 )
---2025-01-31 20:02:31--  https://github.com/wolfSSL/wolfssl-examples/archive/refs/heads/master.tar.gz
-Resolving github.com (github.com)... 140.82.116.4
-Connecting to github.com (github.com)|140.82.116.4|:443... connected.
-HTTP request sent, awaiting response... 302 Found
-Location: https://codeload.github.com/wolfSSL/wolfssl-examples/tar.gz/refs/heads/master [following]
---2025-01-31 20:02:31--  https://codeload.github.com/wolfSSL/wolfssl-examples/tar.gz/refs/heads/master
-Resolving codeload.github.com (codeload.github.com)... 140.82.116.9
-Connecting to codeload.github.com (codeload.github.com)|140.82.116.9|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [application/x-gzip]
-Saving to: 'wolfssl_examples.tar.gz'
+  git switch -c <new-branch-name>
 
-wolfssl_examples.ta     [  <=>               ]   3.68M  16.5MB/s    in 0.2s    
+Or undo this operation with:
 
-2025-01-31 20:02:32 (16.5 MB/s) - 'wolfssl_examples.tar.gz' saved [3856068]
+  git switch -
 
-rm -f wolfssl_5.7.6.tar.gz  wolfssl_examples.tar.gz
-test -f /wolfcrypt_sgx_docker/wolfssl_5.7.6/configure || (cd /wolfcrypt_sgx_docker/wolfssl_5.7.6 && ./autogen.sh)
+Turn off this advice by setting config variable advice.detachedHead to false
+
+test -d __wolfssl_examples || git clone --depth 1 https://github.com/wolfSSL/wolfssl-examples.git __wolfssl_examples
+Cloning into '__wolfssl_examples'...
+remote: Enumerating objects: 1371, done.
+remote: Counting objects: 100% (1371/1371), done.
+remote: Compressing objects: 100% (1078/1078), done.
+remote: Total 1371 (delta 415), reused 862 (delta 252), pack-reused 0 (from 0)
+Receiving objects: 100% (1371/1371), 3.52 MiB | 27.09 MiB/s, done.
+Resolving deltas: 100% (415/415), done.
+test -f /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/configure || (cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable && ./autogen.sh)
 libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, 'build-aux'.
 libtoolize: copying file 'build-aux/ltmain.sh'
 libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
@@ -156,13 +150,13 @@ configure.ac:31: installing 'build-aux/missing'
 Makefile.am: installing 'build-aux/depcomp'
 parallel-tests: installing 'build-aux/test-driver'
 make[1]: Leaving directory '/wolfcrypt_sgx_docker'
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6 && \
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable && \
 ./configure  && ./config.status
 checking whether to enable maintainer-specific portions of Makefiles... no
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-checking for suffix of executables... 
+checking for suffix of executables...
 checking whether we are cross compiling... no
 checking for suffix of object files... o
 checking whether we are using the GNU C compiler... yes
@@ -321,8 +315,8 @@ checking for PTHREAD_PRIO_INHERIT... yes
 checking for cos in -lm... yes
 checking for library containing gethostbyname... none required
 checking for library containing socket... none required
-checking for vcs system... none
-checking for vcs checkout... no
+checking for vcs system... git
+checking for vcs checkout... yes
 checking whether the linker accepts -Werror... yes
 checking whether the linker accepts -z relro -z now... yes
 checking whether the linker accepts -pie... yes
@@ -398,21 +392,21 @@ Configuration summary for wolfssl version 5.7.6
    * System type:                pc-linux-gnu
    * Host CPU:                   x86_64
    * C Compiler:                 gcc
-   * C Flags:                       -Wno-pragmas -Wall -Wextra -Wunknown-pragmas --param=ssp-buffer-size=1 -Waddress -Warray-bounds -Wbad-function-cast -Wchar-subscripts -Wcomment -Wfloat-equal -Wformat-security -Wformat=2 -Wmaybe-uninitialized -Wmissing-field-initializers -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wnormalized=id -Woverride-init -Wpointer-arith -Wpointer-sign -Wshadow -Wsign-compare -Wstrict-overflow=1 -Wswitch-enum -Wundef -Wunused -Wunused-result -Wunused-variable -Wwrite-strings -fwrapv
-   * C++ Compiler:               
-   * C++ Flags:                  
-   * CPP Flags:                  
-   * CCAS Flags:                   
-   * LD Flags:                   
-   * LIB Flags:                   -pie -z relro -z now 
-   * Library Suffix:             
+   * C Flags:                       -Werror -Wno-pragmas -Wall -Wextra -Wunknown-pragmas --param=ssp-buffer-size=1 -Waddress -Warray-bounds -Wbad-function-cast -Wchar-subscripts -Wcomment -Wfloat-equal -Wformat-security -Wformat=2 -Wmaybe-uninitialized -Wmissing-field-initializers -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wnormalized=id -Woverride-init -Wpointer-arith -Wpointer-sign -Wshadow -Wsign-compare -Wstrict-overflow=1 -Wswitch-enum -Wundef -Wunused -Wunused-result -Wunused-variable -Wwrite-strings -fwrapv
+   * C++ Compiler:
+   * C++ Flags:
+   * CPP Flags:
+   * CCAS Flags:
+   * LD Flags:
+   * LIB Flags:                   -pie -z relro -z now -Werror
+   * Library Suffix:
    * Debug enabled:              no
-   * Coverage enabled:           
-   * Warnings as failure:        no
+   * Coverage enabled:
+   * Warnings as failure:        yes
    * make -j:                    5
-   * VCS checkout:               no
+   * VCS checkout:               yes
 
-   Features 
+   Features
    * Experimental settings:      Forbidden
    * FIPS:                       no
    * Single threaded:            no
@@ -649,7 +643,7 @@ Configuration summary for wolfssl version 5.7.6
    * AutoSAR :                   no
 
 ---
-./configure flags: 
+./configure flags:
 ---
 Note: Make sure your application includes "wolfssl/options.h" before any other wolfSSL headers.
       You can define "WOLFSSL_USE_OPTIONS_H" in your application to include this automatically.
@@ -672,16 +666,16 @@ config.status: executing wolfssl/wolfcrypt/fips.h commands
 config.status: executing wolfssl/wolfcrypt/port/cavium/cavium_nitrox.h commands
 config.status: executing wolfssl/wolfcrypt/port/intel/quickassist.h commands
 config.status: executing wolfssl/wolfcrypt/port/intel/quickassist_mem.h commands
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6 && make
-make[1]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable && make
+make[1]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
 make -j5  all-recursive
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
 make[3]: warning: -j5 forced in submake: resetting jobserver mode.
-  CC       examples/client/testsuite_testsuite_test-client.o
   CC       wolfcrypt/test/testsuite_testsuite_test-test.o
-  CC       examples/echoclient/testsuite_testsuite_test-echoclient.o
+  CC       examples/client/testsuite_testsuite_test-client.o
   CC       examples/echoserver/testsuite_testsuite_test-echoserver.o
+  CC       examples/echoclient/testsuite_testsuite_test-echoclient.o
   CC       examples/server/testsuite_testsuite_test-server.o
   CC       examples/client/tests_unit_test-client.o
   CC       examples/server/tests_unit_test-server.o
@@ -749,30 +743,30 @@ make[3]: warning: -j5 forced in submake: resetting jobserver mode.
   CCLD     testsuite/testsuite.test
   CCLD     wolfcrypt/test/testwolfcrypt
   CCLD     tests/unit.test
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[1]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-test -f /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark || make benchmark-build
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark -rsa_sign -ecc
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[1]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+test -f /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark || make benchmark-build
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark -rsa_sign -ecc
 ------------------------------------------------------------------------------
  wolfSSL version 5.7.6
 ------------------------------------------------------------------------------
 Math:   Multi-Precision: Wolf(SP) word-size=64 bits=4096 sp_int.c
 wolfCrypt Benchmark (block bytes 1048576, min 1.0 sec each)
-ECDHE [      SECP256R1]   256    agree      1700 ops took 1.047 sec, avg 0.616 ms, 1623.473 ops/sec
-ECDSA [      SECP256R1]   256     sign      1600 ops took 1.017 sec, avg 0.636 ms, 1573.151 ops/sec
-ECDSA [      SECP256R1]   256   verify      2300 ops took 1.027 sec, avg 0.446 ms, 2239.918 ops/sec
+ECDHE [      SECP256R1]   256    agree      1900 ops took 1.053 sec, avg 0.554 ms, 1803.788 ops/sec
+ECDSA [      SECP256R1]   256     sign      1600 ops took 1.058 sec, avg 0.661 ms, 1512.309 ops/sec
+ECDSA [      SECP256R1]   256   verify      2100 ops took 1.016 sec, avg 0.484 ms, 2066.795 ops/sec
 Benchmark complete
 WOLFSSL_CONFIG_ARGS='--enable-intelasm --enable-aesni --enable-sp --enable-sp-asm --enable-sp-math' make benchmark-build benchmark-run
 make[1]: Entering directory '/wolfcrypt_sgx_docker'
-test -d /wolfcrypt_sgx_docker/wolfssl_5.7.6 || make setup
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6 && \
+test -d /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable || make setup
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable && \
 ./configure --enable-intelasm --enable-aesni --enable-sp --enable-sp-asm --enable-sp-math && ./config.status
 checking whether to enable maintainer-specific portions of Makefiles... no
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-checking for suffix of executables... 
+checking for suffix of executables...
 checking whether we are cross compiling... no
 checking for suffix of object files... o
 checking whether we are using the GNU C compiler... yes
@@ -931,8 +925,8 @@ checking for PTHREAD_PRIO_INHERIT... yes
 checking for cos in -lm... yes
 checking for library containing gethostbyname... none required
 checking for library containing socket... none required
-checking for vcs system... none
-checking for vcs checkout... no
+checking for vcs system... git
+checking for vcs checkout... yes
 checking whether the linker accepts -Werror... yes
 checking whether the linker accepts -z relro -z now... yes
 checking whether the linker accepts -pie... yes
@@ -1009,21 +1003,21 @@ Configuration summary for wolfssl version 5.7.6
    * System type:                pc-linux-gnu
    * Host CPU:                   x86_64
    * C Compiler:                 gcc
-   * C Flags:                       -Wno-pragmas -Wall -Wextra -Wunknown-pragmas --param=ssp-buffer-size=1 -Waddress -Warray-bounds -Wbad-function-cast -Wchar-subscripts -Wcomment -Wfloat-equal -Wformat-security -Wformat=2 -Wmaybe-uninitialized -Wmissing-field-initializers -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wnormalized=id -Woverride-init -Wpointer-arith -Wpointer-sign -Wshadow -Wsign-compare -Wstrict-overflow=1 -Wswitch-enum -Wundef -Wunused -Wunused-result -Wunused-variable -Wwrite-strings -fwrapv
-   * C++ Compiler:               
-   * C++ Flags:                  
-   * CPP Flags:                  
-   * CCAS Flags:                   
-   * LD Flags:                   
-   * LIB Flags:                   -pie -z relro -z now 
-   * Library Suffix:             
+   * C Flags:                       -Werror -Wno-pragmas -Wall -Wextra -Wunknown-pragmas --param=ssp-buffer-size=1 -Waddress -Warray-bounds -Wbad-function-cast -Wchar-subscripts -Wcomment -Wfloat-equal -Wformat-security -Wformat=2 -Wmaybe-uninitialized -Wmissing-field-initializers -Wmissing-noreturn -Wmissing-prototypes -Wnested-externs -Wnormalized=id -Woverride-init -Wpointer-arith -Wpointer-sign -Wshadow -Wsign-compare -Wstrict-overflow=1 -Wswitch-enum -Wundef -Wunused -Wunused-result -Wunused-variable -Wwrite-strings -fwrapv
+   * C++ Compiler:
+   * C++ Flags:
+   * CPP Flags:
+   * CCAS Flags:
+   * LD Flags:
+   * LIB Flags:                   -pie -z relro -z now -Werror
+   * Library Suffix:
    * Debug enabled:              no
-   * Coverage enabled:           
-   * Warnings as failure:        no
+   * Coverage enabled:
+   * Warnings as failure:        yes
    * make -j:                    5
-   * VCS checkout:               no
+   * VCS checkout:               yes
 
-   Features 
+   Features
    * Experimental settings:      Forbidden
    * FIPS:                       no
    * Single threaded:            no
@@ -1283,16 +1277,17 @@ config.status: executing wolfssl/wolfcrypt/fips.h commands
 config.status: executing wolfssl/wolfcrypt/port/cavium/cavium_nitrox.h commands
 config.status: executing wolfssl/wolfcrypt/port/intel/quickassist.h commands
 config.status: executing wolfssl/wolfcrypt/port/intel/quickassist_mem.h commands
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6 && make
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable && make
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
 make -j5  all-recursive
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[4]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[4]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
 make[4]: warning: -j5 forced in submake: resetting jobserver mode.
-  CC       wolfcrypt/src/src_libwolfssl_la-sp_x86_64.lo
-  CPPAS    wolfcrypt/src/src_libwolfssl_la-sp_x86_64_asm.lo
   CPPAS    wolfcrypt/src/src_libwolfssl_la-sha256_asm.lo
+  CPPAS    wolfcrypt/src/src_libwolfssl_la-sp_x86_64_asm.lo
+  CC       wolfcrypt/src/src_libwolfssl_la-sp_x86_64.lo
   CPPAS    wolfcrypt/src/src_libwolfssl_la-sha512_asm.lo
+  CC       wolfcrypt/src/src_libwolfssl_la-sha3.lo
   CPPAS    wolfcrypt/src/src_libwolfssl_la-sha3_asm.lo
   CC       wolfcrypt/src/src_libwolfssl_la-logging.lo
   CC       wolfcrypt/src/src_libwolfssl_la-wc_port.lo
@@ -1357,11 +1352,10 @@ make[4]: warning: -j5 forced in submake: resetting jobserver mode.
   CC       wolfcrypt/src/src_libwolfssl_la-aes.lo
   CC       wolfcrypt/src/src_libwolfssl_la-sha.lo
   CC       wolfcrypt/src/src_libwolfssl_la-sha512.lo
-  CC       wolfcrypt/src/src_libwolfssl_la-sha3.lo
   CCLD     src/libwolfssl.la
   CCLD     wolfcrypt/benchmark/benchmark
-  CCLD     wolfcrypt/test/testwolfcrypt
   CCLD     examples/benchmark/tls_bench
+  CCLD     wolfcrypt/test/testwolfcrypt
   CCLD     examples/client/client
   CCLD     examples/echoclient/echoclient
   CCLD     examples/echoserver/echoserver
@@ -1370,353 +1364,368 @@ make[4]: warning: -j5 forced in submake: resetting jobserver mode.
   CCLD     examples/pem/pem
   CCLD     testsuite/testsuite.test
   CCLD     tests/unit.test
-make[4]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6'
-test -f /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark || make benchmark-build
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark -rsa_sign -ecc
+make[4]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable'
+test -f /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark || make benchmark-build
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark -rsa_sign -ecc
 ------------------------------------------------------------------------------
  wolfSSL version 5.7.6
 ------------------------------------------------------------------------------
 Math:   Multi-Precision: Disabled
         Single Precision: ecc 256 384 521 rsa/dh 2048 3072 4096 asm sp_x86_64.c
 wolfCrypt Benchmark (block bytes 1048576, min 1.0 sec each)
-ECDHE [      SECP256R1]   256    agree     17400 ops took 1.000 sec, avg 0.057 ms, 17392.710 ops/sec
-ECDSA [      SECP256R1]   256     sign     42900 ops took 1.002 sec, avg 0.023 ms, 42809.641 ops/sec
-ECDSA [      SECP256R1]   256   verify     15800 ops took 1.006 sec, avg 0.064 ms, 15709.324 ops/sec
+ECDHE [      SECP256R1]   256    agree     17700 ops took 1.002 sec, avg 0.057 ms, 17660.740 ops/sec
+ECDSA [      SECP256R1]   256     sign     44600 ops took 1.002 sec, avg 0.022 ms, 44511.736 ops/sec
+ECDSA [      SECP256R1]   256   verify     16600 ops took 1.003 sec, avg 0.060 ms, 16547.072 ops/sec
 Benchmark complete
 make[1]: Leaving directory '/wolfcrypt_sgx_docker'
-test -d /wolfcrypt_sgx_docker/wolfssl_5.7.6 || make setup
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX && ./clean.sh && \
+test -d /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable || make setup
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX && ./clean.sh && \
+git diff . | cat -n && \
 sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX|' sgx_t_static.mk && \
 make -f sgx_t_static.mk HAVE_WOLFSSL_BENCHMARK=1 HAVE_WOLFSSL_TEST=1 HAVE_WOLFSSL_SP=1 && \
 ls -lah && test -f libwolfssl.sgx.static.lib.a
-make[1]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-make[1]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-make[1]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.c:35:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+make[1]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+make[1]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+make[1]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.c:35:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.c:41:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.c:41:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.c:40:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.c:40:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.c:60:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.c:60:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.c:36:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.c:36:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.c:39:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.c:39:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.c:39:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.c:39:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.c:35:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.c:35:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.c:26:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.c:26:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.c:31:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.c:31:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/types.h:34,
-                 from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/types.h:34,
+                 from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.c:43:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.c:43:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.c:31:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.c:31:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.c:32:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.c:32:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.c:33:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.c:33:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.c:45:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.c:45:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.c:33:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.c:33:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.c:26:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.c:26:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.c
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.c
-ar rcs libwolfssl.sgx.static.lib.a /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.o
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.c
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.c
+ar rcs libwolfssl.sgx.static.lib.a /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.o
 LINK =>  libwolfssl.sgx.static.lib.a
-make[1]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
+make[1]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
 total 1.1M
-drwxrwxr-x.  2 root root  131 Jan 31 20:04 .
-drwxrwxr-x. 59 root root  16K Dec 31 17:58 ..
--rw-rw-r--.  1 root root 2.5K Dec 31 17:58 README.md
--rwxrwxr-x.  1 root root  185 Dec 31 17:58 build.sh
--rwxrwxr-x.  1 root root   41 Dec 31 17:58 clean.sh
--rw-rw-r--.  1 root root  258 Dec 31 17:58 include.am
--rw-r--r--.  1 root root 989K Jan 31 20:04 libwolfssl.sgx.static.lib.a
--rw-rw-r--.  1 root root 5.2K Jan 31 20:03 sgx_t_static.mk
-cd wolfssl_examples/SGX_Linux && \
+drwxr-xr-x.  2 root root  131 Feb  3 20:26 .
+drwxr-xr-x. 59 root root  16K Feb  3 20:24 ..
+-rw-r--r--.  1 root root 2.5K Feb  3 20:24 README.md
+-rwxr-xr-x.  1 root root  185 Feb  3 20:24 build.sh
+-rwxr-xr-x.  1 root root   41 Feb  3 20:24 clean.sh
+-rw-r--r--.  1 root root  258 Feb  3 20:24 include.am
+-rw-r--r--.  1 root root 989K Feb  3 20:26 libwolfssl.sgx.static.lib.a
+-rw-r--r--.  1 root root 5.2K Feb  3 20:25 sgx_t_static.mk
+cd __wolfssl_examples/SGX_Linux && \
 sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX|' sgx_u.mk && sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX|' sgx_t.mk && \
 sed -i 's/sgx_tstdcxx/sgx_tstdc/' sgx_t.mk && \
+git diff . | cat -n && \
 rm -f ./App && make clean all SGX_MODE=SIM SGX_PRERELEASE=0 SGX_DEBUG=0 \
-        SGX_WOLFSSL_LIB=/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX WOLFSSL_ROOT=/wolfcrypt_sgx_docker/wolfssl_5.7.6 \
+        SGX_WOLFSSL_LIB=/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX WOLFSSL_ROOT=/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable \
         HAVE_WOLFSSL_TEST=' 1' HAVE_WOLFSSL_BENCHMARK=' 1' && \
 ls -lah && ./App
-make[1]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+     1  diff --git a/SGX_Linux/sgx_t.mk b/SGX_Linux/sgx_t.mk
+     2  index 7153aa3..bd32625 100644
+     3  --- a/SGX_Linux/sgx_t.mk
+     4  +++ b/SGX_Linux/sgx_t.mk
+     5  @@ -73,7 +73,7 @@ Wolfssl_Enclave_C_Flags := $(Flags_Just_For_C) $(Common_C_Cpp_Flags) $(Wolfssl_C
+     6   Wolfssl_Enclave_Link_Flags := $(SGX_COMMON_CFLAGS) -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L$(SGX_LIBRARY_PATH) \
+     7          -L$(SGX_WOLFSSL_LIB) -lwolfssl.sgx.static.lib \
+     8          -Wl,--whole-archive -l$(Trts_Library_Name) -Wl,--no-whole-archive \
+     9  -       -Wl,--start-group -lsgx_tstdc -lsgx_tstdcxx -l$(Crypto_Library_Name) -l$(Service_Library_Name) -Wl,--end-group \
+    10  +       -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -l$(Crypto_Library_Name) -l$(Service_Library_Name) -Wl,--end-group \
+    11          -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
+    12          -Wl,-pie,-eenclave_entry -Wl,--export-dynamic  \
+    13          -Wl,--defsym,__ImageBase=0 \
+make[1]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_u.mk clean
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_t.mk clean
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_u.mk all
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 GEN  =>  untrusted/Wolfssl_Enclave_u.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/Wolfssl_Enclave_u.c -o untrusted/Wolfssl_Enclave_u.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/Wolfssl_Enclave_u.c -o untrusted/Wolfssl_Enclave_u.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/Wolfssl_Enclave_u.c:1:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC   <=  untrusted/Wolfssl_Enclave_u.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/App.c -o untrusted/App.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/App.c -o untrusted/App.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/App.h:29,
                  from untrusted/App.c:24:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/App.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/client-tls.c -o untrusted/client-tls.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/client-tls.c -o untrusted/client-tls.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/client-tls.h:26,
                  from untrusted/client-tls.c:22:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/client-tls.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/server-tls.c -o untrusted/server-tls.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/server-tls.c -o untrusted/server-tls.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/server-tls.h:26,
                  from untrusted/server-tls.c:22:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/server-tls.c
 LINK =>  App
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_t.mk all
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 GEN  =>  trusted/Wolfssl_Enclave_t.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from trusted/Wolfssl_Enclave_t.h:9,
                  from trusted/Wolfssl_Enclave_t.c:1:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC   <=  trusted/Wolfssl_Enclave_t.c
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -IInclude -Itrusted -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport-fno-builtin -fno-builtin-printf -I. -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -c trusted/Wolfssl_Enclave.c -o trusted/Wolfssl_Enclave.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -IInclude -Itrusted -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport-fno-builtin -fno-builtin-printf -I. -DWOLFSSL_SGX -DHAVE_WOLFSSL_TEST -DHAVE_WOLFSSL_BENCHMARK -c trusted/Wolfssl_Enclave.c -o trusted/Wolfssl_Enclave.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from trusted/Wolfssl_Enclave_t.h:9,
                  from trusted/Wolfssl_Enclave.c:25:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  trusted/Wolfssl_Enclave.c
--m64 -O2 -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L/opt/intel/sgxsdk/lib64 -L/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX -lwolfssl.sgx.static.lib -Wl,--whole-archive -lsgx_trts_sim -Wl,--no-whole-archive -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -lsgx_tcrypto -lsgx_tservice_sim -Wl,--end-group -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--version-script=trusted/Wolfssl_Enclave.lds@
+-m64 -O2 -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L/opt/intel/sgxsdk/lib64 -L/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX -lwolfssl.sgx.static.lib -Wl,--whole-archive -lsgx_trts_sim -Wl,--no-whole-archive -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -lsgx_tcrypto -lsgx_tservice_sim -Wl,--end-group -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--version-script=trusted/Wolfssl_Enclave.lds@
 LINK =>  Wolfssl_Enclave.so
 <EnclaveConfiguration>
     <ProdID>0</ProdID>
@@ -1734,433 +1743,471 @@ The required memory is 0x38ed000, 58292 KB.
 handle_compatible_metadata: Overwrite with metadata version 0x100000004
 Succeed.
 SIGN =>  Wolfssl_Enclave.signed.so
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[1]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[1]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 total 2.0M
-drwxrwxr-x.  5 root root  16K Jan 31 20:04 .
-drwxr-xr-x. 52 root root  16K Jan 31 20:02 ..
--rwxr-xr-x.  1 root root  37K Jan 31 20:04 App
--rw-rw-r--.  1 root root  306 Jan 28 15:16 Makefile
-drwxrwxr-x.  2 root root  191 Jan 28 15:16 README-images
--rw-rw-r--.  1 root root 5.8K Jan 28 15:16 README.md
--rw-r--r--.  1 root root 922K Jan 31 20:04 Wolfssl_Enclave.signed.so
--rwxr-xr-x.  1 root root 922K Jan 31 20:04 Wolfssl_Enclave.so
--rwxrwxr-x.  1 root root  281 Jan 28 15:16 build.sh
--rw-rw-r--.  1 root root 4.7K Jan 31 20:04 sgx_t.mk
--rw-rw-r--.  1 root root 4.1K Jan 31 20:04 sgx_u.mk
-drwxrwxr-x.  2 root root  16K Jan 31 20:04 trusted
-drwxrwxr-x.  2 root root  16K Jan 31 20:04 untrusted
+drwxr-xr-x.  5 root root  16K Feb  3 20:26 .
+drwxr-xr-x. 53 root root  16K Feb  3 20:24 ..
+-rwxr-xr-x.  1 root root  37K Feb  3 20:26 App
+-rw-r--r--.  1 root root  306 Feb  3 20:24 Makefile
+drwxr-xr-x.  2 root root  191 Feb  3 20:24 README-images
+-rw-r--r--.  1 root root 5.8K Feb  3 20:24 README.md
+-rw-r--r--.  1 root root 922K Feb  3 20:26 Wolfssl_Enclave.signed.so
+-rwxr-xr-x.  1 root root 922K Feb  3 20:26 Wolfssl_Enclave.so
+-rwxr-xr-x.  1 root root  281 Feb  3 20:24 build.sh
+-rw-r--r--.  1 root root 4.7K Feb  3 20:26 sgx_t.mk
+-rw-r--r--.  1 root root 4.1K Feb  3 20:26 sgx_u.mk
+drwxr-xr-x.  2 root root  16K Feb  3 20:26 trusted
+drwxr-xr-x.  2 root root  16K Feb  3 20:26 untrusted
 Usage:
         -c Run a TLS client in enclave
         -s Run a TLS server in enclave
-        -t Run wolfCrypt tests only 
+        -t Run wolfCrypt tests only
         -b Run wolfCrypt benchmarks in enclave
-cd wolfssl_examples/SGX_Linux && ./App -b
+cd __wolfssl_examples/SGX_Linux && ./App -b
 
 Benchmark Test:
 wolfCrypt Benchmark (block bytes 1048576, min 1.0 sec each)
-RNG                         55 MiB took 1.009 seconds,   54.522 MiB/s
-AES-128-CBC-enc            205 MiB took 1.014 seconds,  202.095 MiB/s
-AES-128-CBC-dec            170 MiB took 1.015 seconds,  167.529 MiB/s
-AES-192-CBC-enc            180 MiB took 1.012 seconds,  177.872 MiB/s
-AES-192-CBC-dec            230 MiB took 1.005 seconds,  228.876 MiB/s
-AES-256-CBC-enc            160 MiB took 1.000 seconds,  159.956 MiB/s
-AES-256-CBC-dec            195 MiB took 1.009 seconds,  193.189 MiB/s
-AES-128-GCM-enc             60 MiB took 1.091 seconds,   55.016 MiB/s
-AES-128-GCM-dec             60 MiB took 1.089 seconds,   55.079 MiB/s
-AES-192-GCM-enc             45 MiB took 1.002 seconds,   44.904 MiB/s
-AES-192-GCM-dec             45 MiB took 1.003 seconds,   44.859 MiB/s
-AES-256-GCM-enc             50 MiB took 1.036 seconds,   48.274 MiB/s
-AES-256-GCM-dec             55 MiB took 1.100 seconds,   50.023 MiB/s
-AES-128-GCM-enc-no_AAD      55 MiB took 1.072 seconds,   51.303 MiB/s
-AES-128-GCM-dec-no_AAD      55 MiB took 1.051 seconds,   52.311 MiB/s
-AES-192-GCM-enc-no_AAD      55 MiB took 1.034 seconds,   53.208 MiB/s
-AES-192-GCM-dec-no_AAD      50 MiB took 1.052 seconds,   47.548 MiB/s
-AES-256-GCM-enc-no_AAD      50 MiB took 1.040 seconds,   48.100 MiB/s
-AES-256-GCM-dec-no_AAD      45 MiB took 1.054 seconds,   42.679 MiB/s
-GMAC Default                64 MiB took 1.010 seconds,   63.375 MiB/s
-3DES                        30 MiB took 1.153 seconds,   26.022 MiB/s
-MD5                        550 MiB took 1.001 seconds,  549.194 MiB/s
-SHA                        435 MiB took 1.001 seconds,  434.486 MiB/s
-SHA-256                    190 MiB took 1.024 seconds,  185.462 MiB/s
-HMAC-MD5                   550 MiB took 1.007 seconds,  546.286 MiB/s
-HMAC-SHA                   435 MiB took 1.000 seconds,  434.983 MiB/s
-HMAC-SHA256                195 MiB took 1.015 seconds,  192.208 MiB/s
-PBKDF2                      22 KiB took 1.001 seconds,   22.199 KiB/s
-RSA     2048   public      5300 ops took 1.016 sec, avg 0.192 ms, 5216.982 ops/sec
-RSA     2048  private       100 ops took 1.005 sec, avg 10.046 ms, 99.547 ops/sec
-DH      2048  key gen       231 ops took 1.002 sec, avg 4.336 ms, 230.620 ops/sec
-DH      2048    agree       300 ops took 1.293 sec, avg 4.310 ms, 232.039 ops/sec
-ECC   [      SECP256R1]   256  key gen      7300 ops took 1.016 sec, avg 0.139 ms, 7184.503 ops/sec
-ECDHE [      SECP256R1]   256    agree      2900 ops took 1.035 sec, avg 0.357 ms, 2802.536 ops/sec
-ECDSA [      SECP256R1]   256     sign      4900 ops took 1.014 sec, avg 0.207 ms, 4833.419 ops/sec
-ECDSA [      SECP256R1]   256   verify      3000 ops took 1.013 sec, avg 0.338 ms, 2961.887 ops/sec
+RNG                         85 MiB took 1.037 seconds,   81.993 MiB/s
+AES-128-CBC-enc            255 MiB took 1.018 seconds,  250.375 MiB/s
+AES-128-CBC-dec            290 MiB took 1.015 seconds,  285.847 MiB/s
+AES-192-CBC-enc            215 MiB took 1.021 seconds,  210.493 MiB/s
+AES-192-CBC-dec            240 MiB took 1.010 seconds,  237.591 MiB/s
+AES-256-CBC-enc            190 MiB took 1.026 seconds,  185.100 MiB/s
+AES-256-CBC-dec            205 MiB took 1.003 seconds,  204.360 MiB/s
+AES-128-GCM-enc             60 MiB took 1.044 seconds,   57.466 MiB/s
+AES-128-GCM-dec             60 MiB took 1.048 seconds,   57.267 MiB/s
+AES-192-GCM-enc             60 MiB took 1.077 seconds,   55.731 MiB/s
+AES-192-GCM-dec             55 MiB took 1.091 seconds,   50.390 MiB/s
+AES-256-GCM-enc             35 MiB took 1.089 seconds,   32.149 MiB/s
+AES-256-GCM-dec             35 MiB took 1.039 seconds,   33.696 MiB/s
+AES-128-GCM-enc-no_AAD      50 MiB took 1.003 seconds,   49.833 MiB/s
+AES-128-GCM-dec-no_AAD      55 MiB took 1.076 seconds,   51.093 MiB/s
+AES-192-GCM-enc-no_AAD      55 MiB took 1.059 seconds,   51.938 MiB/s
+AES-192-GCM-dec-no_AAD      55 MiB took 1.004 seconds,   54.775 MiB/s
+AES-256-GCM-enc-no_AAD      55 MiB took 1.027 seconds,   53.529 MiB/s
+AES-256-GCM-dec-no_AAD      55 MiB took 1.038 seconds,   52.977 MiB/s
+GMAC Default                70 MiB took 1.007 seconds,   69.515 MiB/s
+3DES                        30 MiB took 1.089 seconds,   27.545 MiB/s
+MD5                        570 MiB took 1.002 seconds,  568.620 MiB/s
+SHA                        440 MiB took 1.015 seconds,  433.634 MiB/s
+SHA-256                    145 MiB took 1.012 seconds,  143.223 MiB/s
+HMAC-MD5                   570 MiB took 1.003 seconds,  568.084 MiB/s
+HMAC-SHA                   430 MiB took 1.008 seconds,  426.537 MiB/s
+HMAC-SHA256                135 MiB took 1.008 seconds,  133.989 MiB/s
+PBKDF2                      21 KiB took 1.001 seconds,   20.605 KiB/s
+RSA     2048   public      6300 ops took 1.009 sec, avg 0.160 ms, 6245.254 ops/sec
+RSA     2048  private       200 ops took 1.674 sec, avg 8.370 ms, 119.477 ops/sec
+DH      2048  key gen       283 ops took 1.001 sec, avg 3.537 ms, 282.758 ops/sec
+DH      2048    agree       300 ops took 1.059 sec, avg 3.530 ms, 283.246 ops/sec
+ECC   [      SECP256R1]   256  key gen      8600 ops took 1.011 sec, avg 0.118 ms, 8508.701 ops/sec
+ECDHE [      SECP256R1]   256    agree      3300 ops took 1.027 sec, avg 0.311 ms, 3212.176 ops/sec
+ECDSA [      SECP256R1]   256     sign      6100 ops took 1.011 sec, avg 0.166 ms, 6033.421 ops/sec
+ECDSA [      SECP256R1]   256   verify      3100 ops took 1.014 sec, avg 0.327 ms, 3057.926 ops/sec
 Benchmark complete
 Benchmark Test: Return code 0
 Wolfssl_C_Extra_Flags='-DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include' make benchmark-sgx
 make[1]: Entering directory '/wolfcrypt_sgx_docker'
-test -d /wolfcrypt_sgx_docker/wolfssl_5.7.6 || make setup
-cd /wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX && ./clean.sh && \
+test -d /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable || make setup
+cd /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX && ./clean.sh && \
+git diff . | cat -n && \
 sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include|' sgx_t_static.mk && \
 make -f sgx_t_static.mk HAVE_WOLFSSL_BENCHMARK=1 HAVE_WOLFSSL_TEST=1 HAVE_WOLFSSL_SP=1 && \
 ls -lah && test -f libwolfssl.sgx.static.lib.a
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.c:35:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.c:35:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.c:41:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.c:41:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.c:40:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.c:40:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.c:60:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.c:60:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.c:36:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.c:36:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.c:39:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.c:39:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.c:39:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.c:39:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.c:35:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.c:35:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.c:26:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.c:26:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.c:31:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.c:31:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/types.h:34,
-                 from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/types.h:34,
+                 from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.c:29:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.c:29:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.c:43:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.c:43:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.c:31:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.c:31:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.c:34:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.c:34:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.c:32:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.c:32:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.c:33:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.c:33:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.c:45:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.c:45:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.c:33:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.c:33:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.c:28:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.c:28:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.c:27:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.c:27:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.c:26:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.c
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.c:26:
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.c
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.c
-ar rcs libwolfssl.sgx.static.lib.a /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/crl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/internal.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/wolfio.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/keys.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ocsp.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/ssl.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/src/tls.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/benchmark.o
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.c
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DWOLFSSL_HAVE_SP_RSA -DWOLFSSL_HAVE_SP_DH -DWOLFSSL_HAVE_SP_ECC   -c -o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.c
+ar rcs libwolfssl.sgx.static.lib.a /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/aes.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/arc4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/asn.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/blake2b.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/camellia.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/coding.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/chacha20_poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/crl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/des3.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dh.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/tfm.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ecc.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/error.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hash.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/kdf.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/hmac.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/integer.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/internal.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/wolfio.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/keys.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/logging.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md4.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/md5.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/memory.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ocsp.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs7.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pkcs12.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/poly1305.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_port.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfmath.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/pwdbased.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/random.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/ripemd.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/rsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/dsa.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha256.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sha512.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/signature.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c32.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_c64.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/sp_int.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/ssl.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/src/tls.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wc_encrypt.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/src/wolfevent.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/test.o /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/benchmark.o
 LINK =>  libwolfssl.sgx.static.lib.a
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX'
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX'
 total 1.1M
-drwxrwxr-x.  2 root root  131 Jan 31 20:04 .
-drwxrwxr-x. 59 root root  16K Dec 31 17:58 ..
--rw-rw-r--.  1 root root 2.5K Dec 31 17:58 README.md
--rwxrwxr-x.  1 root root  185 Dec 31 17:58 build.sh
--rwxrwxr-x.  1 root root   41 Dec 31 17:58 clean.sh
--rw-rw-r--.  1 root root  258 Dec 31 17:58 include.am
--rw-r--r--.  1 root root 996K Jan 31 20:04 libwolfssl.sgx.static.lib.a
--rw-rw-r--.  1 root root 5.2K Jan 31 20:04 sgx_t_static.mk
-cd wolfssl_examples/SGX_Linux && \
+drwxr-xr-x.  2 root root  131 Feb  3 20:27 .
+drwxr-xr-x. 59 root root  16K Feb  3 20:24 ..
+-rw-r--r--.  1 root root 2.5K Feb  3 20:24 README.md
+-rwxr-xr-x.  1 root root  185 Feb  3 20:24 build.sh
+-rwxr-xr-x.  1 root root   41 Feb  3 20:24 clean.sh
+-rw-r--r--.  1 root root  258 Feb  3 20:24 include.am
+-rw-r--r--.  1 root root 996K Feb  3 20:27 libwolfssl.sgx.static.lib.a
+-rw-r--r--.  1 root root 5.2K Feb  3 20:26 sgx_t_static.mk
+cd __wolfssl_examples/SGX_Linux && \
 sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include|' sgx_u.mk && sed -i 's|Wolfssl_C_Extra_Flags :=.*|Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include|' sgx_t.mk && \
 sed -i 's/sgx_tstdcxx/sgx_tstdc/' sgx_t.mk && \
+git diff . | cat -n && \
 rm -f ./App && make clean all SGX_MODE=SIM SGX_PRERELEASE=0 SGX_DEBUG=0 \
-        SGX_WOLFSSL_LIB=/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX WOLFSSL_ROOT=/wolfcrypt_sgx_docker/wolfssl_5.7.6 \
+        SGX_WOLFSSL_LIB=/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX WOLFSSL_ROOT=/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable \
         HAVE_WOLFSSL_TEST=' 1' HAVE_WOLFSSL_BENCHMARK=' 1' && \
 ls -lah && ./App
-make[2]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+     1  diff --git a/SGX_Linux/sgx_t.mk b/SGX_Linux/sgx_t.mk
+     2  index 7153aa3..016aba1 100644
+     3  --- a/SGX_Linux/sgx_t.mk
+     4  +++ b/SGX_Linux/sgx_t.mk
+     5  @@ -40,7 +40,7 @@ endif
+     6   Crypto_Library_Name := sgx_tcrypto
+     7
+     8
+     9  -Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX
+    10  +Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include
+    11   Wolfssl_Include_Paths := -I$(WOLFSSL_ROOT)/ \
+    12                                                   -I$(WOLFSSL_ROOT)/wolfcrypt/
+    13
+    14  @@ -73,7 +73,7 @@ Wolfssl_Enclave_C_Flags := $(Flags_Just_For_C) $(Common_C_Cpp_Flags) $(Wolfssl_C
+    15   Wolfssl_Enclave_Link_Flags := $(SGX_COMMON_CFLAGS) -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L$(SGX_LIBRARY_PATH) \
+    16          -L$(SGX_WOLFSSL_LIB) -lwolfssl.sgx.static.lib \
+    17          -Wl,--whole-archive -l$(Trts_Library_Name) -Wl,--no-whole-archive \
+    18  -       -Wl,--start-group -lsgx_tstdc -lsgx_tstdcxx -l$(Crypto_Library_Name) -l$(Service_Library_Name) -Wl,--end-group \
+    19  +       -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -l$(Crypto_Library_Name) -l$(Service_Library_Name) -Wl,--end-group \
+    20          -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
+    21          -Wl,-pie,-eenclave_entry -Wl,--export-dynamic  \
+    22          -Wl,--defsym,__ImageBase=0 \
+    23  diff --git a/SGX_Linux/sgx_u.mk b/SGX_Linux/sgx_u.mk
+    24  index b5792f1..cb0cdc8 100644
+    25  --- a/SGX_Linux/sgx_u.mk
+    26  +++ b/SGX_Linux/sgx_u.mk
+    27  @@ -38,7 +38,7 @@ else
+    28          Urts_Library_Name := sgx_urts
+    29   endif
+    30
+    31  -Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX
+    32  +Wolfssl_C_Extra_Flags := -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include
+    33   Wolfssl_Include_Paths := -I$(WOLFSSL_ROOT)/ \
+    34                                                   -I$(WOLFSSL_ROOT)/wolfcrypt/
+    35
+make[2]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_u.mk clean
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_t.mk clean
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_u.mk all
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 GEN  =>  untrusted/Wolfssl_Enclave_u.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/Wolfssl_Enclave_u.c -o untrusted/Wolfssl_Enclave_u.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/Wolfssl_Enclave_u.c -o untrusted/Wolfssl_Enclave_u.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/Wolfssl_Enclave_u.c:1:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC   <=  untrusted/Wolfssl_Enclave_u.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/App.c -o untrusted/App.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/App.c -o untrusted/App.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/App.h:29,
                  from untrusted/App.c:24:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/App.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/client-tls.c -o untrusted/client-tls.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/client-tls.c -o untrusted/client-tls.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/client-tls.h:26,
                  from untrusted/client-tls.c:22:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/client-tls.c
-cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/server-tls.c -o untrusted/server-tls.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -m64 -O2 -fPIC -Wno-attributes -IInclude -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/test/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/benchmark/ -Iuntrusted -I/opt/intel/sgxsdk/include -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -DNDEBUG -UEDEBUG -UDEBUG -c untrusted/server-tls.c -o untrusted/server-tls.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from untrusted/Wolfssl_Enclave_u.h:10,
                  from untrusted/server-tls.h:26,
                  from untrusted/server-tls.c:22:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  untrusted/server-tls.c
 LINK =>  App
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make -ef sgx_t.mk all
-make[3]: Entering directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Entering directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 GEN  =>  trusted/Wolfssl_Enclave_t.c
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from trusted/Wolfssl_Enclave_t.h:9,
                  from trusted/Wolfssl_Enclave_t.c:1:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC   <=  trusted/Wolfssl_Enclave_t.c
-cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -IInclude -Itrusted -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/ -I/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport-fno-builtin -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -c trusted/Wolfssl_Enclave.c -o trusted/Wolfssl_Enclave.o
-In file included from /wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/ssl.h:33,
+cc -Wno-implicit-function-declaration -std=c99 -m64 -O2 -nostdinc -fvisibility=hidden -fpie -fstack-protector -IInclude -Itrusted -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/ -I/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfcrypt/ -I/opt/intel/sgxsdk/include -I/opt/intel/sgxsdk/include/tlibc -I/opt/intel/sgxsdk/include/stlport-fno-builtin -fno-builtin-printf -I. -DWOLFSSL_SGX -DUSE_INTEL_SPEEDUP -DWOLFSSL_AESNI -maes -I/usr/lib/gcc/x86_64-redhat-linux/8/include -c trusted/Wolfssl_Enclave.c -o trusted/Wolfssl_Enclave.o
+In file included from /wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/ssl.h:33,
                  from trusted/Wolfssl_Enclave_t.h:9,
                  from trusted/Wolfssl_Enclave.c:25:
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/wolfssl/wolfcrypt/settings.h:349:6: warning: #warning "No configuration for wolfSSL detected, check header order" [-Wcpp]
      #warning "No configuration for wolfSSL detected, check header order"
       ^~~~~~~
 CC  <=  trusted/Wolfssl_Enclave.c
--m64 -O2 -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L/opt/intel/sgxsdk/lib64 -L/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX -lwolfssl.sgx.static.lib -Wl,--whole-archive -lsgx_trts_sim -Wl,--no-whole-archive -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -lsgx_tcrypto -lsgx_tservice_sim -Wl,--end-group -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--version-script=trusted/Wolfssl_Enclave.lds@
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `AES_set_encrypt_key_AESNI':
+-m64 -O2 -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L/opt/intel/sgxsdk/lib64 -L/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX -lwolfssl.sgx.static.lib -Wl,--whole-archive -lsgx_trts_sim -Wl,--no-whole-archive -Wl,--start-group -lsgx_tstdc -lsgx_tstdc -lsgx_tcrypto -lsgx_tservice_sim -Wl,--end-group -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-pie,-eenclave_entry -Wl,--export-dynamic -Wl,--defsym,__ImageBase=0 -Wl,--version-script=trusted/Wolfssl_Enclave.lds@
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `AES_set_encrypt_key_AESNI':
 aes.c:(.text+0xcc): undefined reference to `AES_128_Key_Expansion_AESNI'
 aes.c:(.text+0xe4): undefined reference to `AES_256_Key_Expansion_AESNI'
 aes.c:(.text+0x104): undefined reference to `AES_192_Key_Expansion_AESNI'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesEncrypt':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesEncrypt':
 aes.c:(.text+0x33d): undefined reference to `AES_ECB_encrypt_AESNI'
 aes.c:(.text+0x377): undefined reference to `AES_ECB_encrypt_AESNI'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesSetKeyLocal.constprop.4':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesSetKeyLocal.constprop.4':
 aes.c:(.text+0x1789): undefined reference to `cpuid_get_flags'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesCbcEncrypt':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesCbcEncrypt':
 aes.c:(.text+0x1d60): undefined reference to `AES_CBC_encrypt_AESNI'
 aes.c:(.text+0x1de3): undefined reference to `AES_CBC_encrypt_AESNI'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesCbcDecrypt':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesCbcDecrypt':
 aes.c:(.text+0x1f28): undefined reference to `AES_ECB_decrypt_AESNI'
 aes.c:(.text+0x2df5): undefined reference to `AES_CBC_decrypt_AESNI_by8'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesGcmEncrypt':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesGcmEncrypt':
 aes.c:(.text+0x376d): undefined reference to `AES_GCM_encrypt_avx1'
 aes.c:(.text+0x379f): undefined reference to `AES_GCM_encrypt_avx2'
 aes.c:(.text+0x37f7): undefined reference to `AES_GCM_encrypt_aesni'
-/wolfcrypt_sgx_docker/wolfssl_5.7.6/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesGcmDecrypt':
+/wolfcrypt_sgx_docker/__wolfssl_v5.7.6-stable/IDE/LINUX-SGX/libwolfssl.sgx.static.lib.a(aes.o): In function `wc_AesGcmDecrypt':
 aes.c:(.text+0x3c8f): undefined reference to `AES_GCM_decrypt_avx1'
 aes.c:(.text+0x3cf0): undefined reference to `AES_GCM_decrypt_avx2'
 aes.c:(.text+0x3d53): undefined reference to `AES_GCM_decrypt_aesni'
 collect2: error: ld returned 1 exit status
 make[3]: *** [sgx_t.mk:134: Wolfssl_Enclave.so] Error 1
-make[3]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
+make[3]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
 make[2]: *** [Makefile:14: all] Error 2
-make[2]: Leaving directory '/wolfcrypt_sgx_docker/wolfssl_examples/SGX_Linux'
-make[1]: *** [Makefile:67: sgx-example-build] Error 2
+make[2]: Leaving directory '/wolfcrypt_sgx_docker/__wolfssl_examples/SGX_Linux'
+make[1]: *** [Makefile:61: sgx-example-build] Error 2
 make[1]: Leaving directory '/wolfcrypt_sgx_docker'
-make: *** [Makefile:27: benchmark-sgx-intel] Error 2
+make: *** [Makefile:25: benchmark-sgx-intel] Error 2
 make[1]: *** [Makefile:8: docker-shell] Error 2
-make[1]: Leaving directory '/home/ec2-user/wolfcrypt_sgx_docker'
+make[1]: Leaving directory '/home/ec2-user/wolfssl_wolfcrypt/wolfcrypt_sgx_docker'
+
 ```
